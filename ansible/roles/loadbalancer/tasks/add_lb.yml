@@ -1,0 +1,16 @@
+ 
+ - name: Add LoadBalancer
+   uri:
+     url: http://localhost:9090/lb
+     method: POST
+     body_format: json
+     body: '{"name":"{{name_lb}}","vip":"{{vip_lb}}","port":"{{port_lb}}","dns":{"ttl":"{{ttl_lb}}","cname":"{{cname_lb}}"}}'
+   #  body: "name={{name_lb}}&vip={{vip_lb}}&port={{port_lb}}&dns{ttl:1, cname: ola}"
+     status_code: 200
+     headers:
+       Content-Type: "application/json"
+   register: login
+
+ - name: Dcug
+   debug: 
+     msg: "{{name_lb}}"

@@ -1,0 +1,16 @@
+name_services:
+  - name: awesomeapp_1
+    ip_svc: 8080
+    port:8080
+
+name_svc_1: awesomeapp_1
+ip_svc: 10.0.2.70
+port_svc: 8080 
+
+name_svc_2: awesomeapp_1
+ip_svc: 10.0.2.71
+port_svc: 8080 
+
+name_svc_3: awesomeapp_1
+ip_svc: 10.0.2.72
+port_svc: 8080 
