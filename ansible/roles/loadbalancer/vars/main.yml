@@ -1,5 +1,0 @@
-name_lb: lb_prod
-vip_lb: 10.0.2.5
-ttl_lb: 1
-cname_lb: awesomeapp.blip.pt
-port_lb: 8080 

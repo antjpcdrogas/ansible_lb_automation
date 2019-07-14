@@ -1,9 +1,0 @@
- - name:  Main LoadBalancer role with no tag
-   debug:
-     msg: "Hello from Main LoadBalancer"
-
- - name: Adding LB with ag
-   debug:
-
-     msg: "adding lb"
-   tags: add_lb

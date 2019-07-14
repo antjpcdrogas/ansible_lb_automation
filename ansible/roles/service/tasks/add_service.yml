@@ -1,4 +1,0 @@
- - name: Dcug
-   debug: 
-     msg: "{{item}}"
-   with_items: "{{name_services}}"
