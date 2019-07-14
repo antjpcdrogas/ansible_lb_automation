@@ -1,0 +1,17 @@
+ 
+ - name: Add Monitors
+   uri:
+     url: "{{API_ADDR}}/monitor"
+     method: POST
+     body_format: json
+     body: '{"name":"{{item.name_mon}}","response":"{{item.response_mon}}","interval":"{{item.interval_mon}}","monitor_path":"{{item.monitor_path_mon}}"}' 
+   #  body: "name={{name_lb}}&vip={{vip_lb}}&port={{port_lb}}&dns{ttl:1, cname: ola}"
+     status_code: 200
+     headers:
+       Content-Type: "application/json"
+   register: add_monitor
+   with_items: "{{name_monitors}}"
+
+ - name: Debug monitor
+   debug: 
+     msg: "{{name_monitors}}"

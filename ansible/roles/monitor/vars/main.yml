@@ -1,0 +1,16 @@
+name_monitors:
+  - name_mon: monitor_1
+    response_mon: OK 
+    interval_mon: 5 
+    monitor_path_mon: http://10.0.2.70/webping
+
+  - name_mon: monitor_2
+    response_mon: OK
+    interval_mon: 5 
+    monitor_path_mon: http://10.0.2.71/webping
+
+  - name_mon: monitor_3
+    response_mon: OK
+    interval_mon: 5
+    monitor_path_mon: http://10.0.2.72/webping
+
