@@ -5,7 +5,7 @@
   - include_vars: global_vars.yml
   - name: Query API to check if theres any LB present
     uri:
-      url: "http://localhost:9090/lb"
+      url: "{{API_ADDR}}/lb"
     register: lb_json
 
   - set_fact:
@@ -29,8 +29,12 @@
       - include_role:
           name: monitor
           tasks_from: add_monitor
-
-
+      - include_role:
+          name: bind
+          tasks_from: bind_svc_to_mon
+      - include_role:
+          name: bind
+          tasks_from: bind_svc_to_lb
    #   - include_role:
    #       name: service
    #       tasks_from: del_service

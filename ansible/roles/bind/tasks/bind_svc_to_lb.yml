@@ -1,0 +1,20 @@
+ - name: Bind services to LB
+   uri:
+     url: "{{API_ADDR}}/lb/{{name_lb}}/bind/{{item.name_svc}}"
+     method: PUT
+    
+     status_code: 200
+     headers:
+       Content-Type: "application/json"
+   register: register_bind_svctolb
+   with_items:
+     - "{{name_services}}"
+  
+
+
+ #- name: Dcug
+ #  debug: 
+ #    msg: "{{item.name_svc}} is now binded to {{name_lb}}"
+ #  with_items:
+ #    - "{{name_services}}"
+    

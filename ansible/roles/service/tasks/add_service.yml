@@ -1,6 +1,6 @@
  - name: Add static services present on roles/services/var
    uri:
-     url: http://localhost:9090/service
+     url: "{{API_ADDR}}/service"
      method: POST
      body_format: json
      body: '{"name":"{{item.name_svc}}","ip":"{{item.ip_svc}}","port":"{{item.port_svc}}"}'  

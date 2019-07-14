@@ -1,0 +1,14 @@
+ - name: Delete monitors
+   uri:
+     url: "{{API_ADDR}}/monitor/{{item.name_mon}}"
+     method: DELETE
+     
+     status_code: 200
+     headers:
+       Content-Type: "application/json"
+   register: delete_monitors
+   with_items: "{{name_monitors}}"
+ - name: debug
+   debug:
+    msg: "{{delete_monitors}}"
+

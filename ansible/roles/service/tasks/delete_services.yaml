@@ -1,6 +1,6 @@
  - name: Delete services
    uri:
-     url: http://localhost:9090/service/{{item.name_svc}}"
+     url: "{{API_ADDR}}/service/{{item.name_svc}}"
      method: DELETE
      body_format: json
      #body: '{"name":"{{item.name_svc}}","ip":"{{item.ip_svc}}","port":"{{item.port_svc}}"}'  

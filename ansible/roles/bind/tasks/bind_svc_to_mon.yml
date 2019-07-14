@@ -1,0 +1,20 @@
+ - name: Bind services to monitors
+   uri:
+     url: "{{API_ADDR}}/service/{{item.0.name_svc}}/bind/{{item.1.name_mon}}"
+     method: PUT
+    
+     status_code: 200
+     headers:
+       Content-Type: "application/json"
+   register: register_bind_svctolb
+   with_together:
+     - "{{name_services}}"
+     - "{{name_monitors}}"
+
+
+ - name: Dcug
+   debug: 
+     msg: "{{item.0.name_svc}} is now binded to {{item.1.name_mon}}"
+   with_together:
+     - "{{name_services}}"
+     - "{{name_monitors}}"

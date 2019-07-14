@@ -1,0 +1,13 @@
+ - name: Delete LB
+   uri:
+     url: "{{API_ADDR}}/lb/{{name_lb}}"
+     method: DELETE
+     
+     status_code: 200
+     headers:
+       Content-Type: "application/json"
+   register: delete_lb
+   
+ - name: debug
+   debug:
+    msg: "{{delete_services}}"

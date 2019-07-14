@@ -1,0 +1,39 @@
+---
+- hosts: localhost
+  
+  pre_tasks:
+  - include_vars: global_vars.yml
+  - name: Query API to check if theres any LB present
+    uri:
+      url: "{{API_ADDR}}/lb"
+    register: lb_json
+
+  - set_fact:
+      new_infra: true 
+#    when: lb_json.json | length == 0 #UNCOMMENT
+
+
+
+
+  tasks:
+    - name: Destroy all compoments(LB,services and monitors)
+      block:
+      - include_role:
+          name: service
+          tasks_from: del_service
+  
+
+
+      - include_role:
+          name: loadbalancer
+          tasks_from: del_lb
+
+
+      - include_role:
+          name: monitor
+          tasks_from: del_monitor
+      when: new_infra is defined  
+
+
+
+
