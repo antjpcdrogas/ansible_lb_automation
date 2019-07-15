@@ -1,0 +1,41 @@
+
+ - name: START CORE PLAY DEBUG
+   debug:
+   #  msg: "{{item | tojson}}"
+    msg: "{{item.key}} lb prod -> {{name_lb_prod}}"
+ - name: PAUSE
+   debug:
+   #  msg: "{{item | tojson}}"
+    msg: "PAUSE"
+
+
+                                     
+
+
+
+ - name: "Delete service {{item.key}}"                         
+   uri:
+     url: "{{API_ADDR}}/service/{{item.key}}"
+     method: DELETE
+     
+     status_code: 200
+     headers:
+       Content-Type: "application/json"
+   register: register_delete_services
+   
+ - name: debug
+   debug:
+    msg: "{{register_delete_services}}"
+
+
+ 
+
+
+
+
+
+  
+
+
+
+

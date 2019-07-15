@@ -1,0 +1,13 @@
+ - name: Retrieve all services present on LB
+   uri:
+     url: "{{API_ADDR}}/lb"
+     method: GET
+     headers:
+      Content-Type: "application/json"
+     
+   register: register_get_lbs
+ - name: CHECK PULLED LOADBALANCERS
+   debug:
+     msg: "{{item}}"
+   with_indexed_items:
+     - "{{register_get_lbs.json}}"

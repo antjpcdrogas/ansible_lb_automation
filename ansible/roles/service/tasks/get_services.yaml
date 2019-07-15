@@ -1,0 +1,13 @@
+ - name: Retrieve all services present on LB
+   uri:
+     url: "{{API_ADDR}}/service"
+     method: GET
+     
+   register: register_get_services 
+ - name: CHECK PULLED SERVICED
+   debug:
+     msg: "{{item}}"
+   with_indexed_items:
+     - "{{register_get_services.json}}"
+
+

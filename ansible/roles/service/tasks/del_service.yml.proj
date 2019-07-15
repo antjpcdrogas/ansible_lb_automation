@@ -1,0 +1,22 @@
+ 
+
+ - name: del service debug
+   debug:
+     msg: "{{item}}"
+   with_items: "{{name_services}}"
+
+
+# - name: Delete services
+#   uri:
+#     url: "{{API_ADDR}}/service/{{item.name}}"
+#     method: DELETE
+#     
+#     status_code: 200
+#     headers:
+#       Content-Type: "application/json"
+#   register: delete_services
+#   with_items: "{{name_services}}"
+# - name: debug
+#   debug:
+#    msg: "{{delete_services}}"
+

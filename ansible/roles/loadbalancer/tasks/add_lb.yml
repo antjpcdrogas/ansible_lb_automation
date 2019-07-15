@@ -10,6 +10,8 @@
        Content-Type: "application/json"
    register: login
 
-# - name: Dcug
-#   debug: 
-#     msg: "{{name_lb}}"
+
+
+ - name: Dcug
+   debug: 
+     msg: "{{name_lb}}"

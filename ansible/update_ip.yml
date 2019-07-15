@@ -1,0 +1,62 @@
+---
+- hosts: localhost
+  vars:
+    NEW_IP: 168.192.0.1
+
+
+  pre_tasks:
+  - include_vars: global_vars.yml
+
+
+
+  tasks:
+    
+    - name: get all components present on the LB 
+      block:
+      - include_role:
+          name: service
+          tasks_from: get_services
+
+      - include_role:
+          name: loadbalancer
+          tasks_from: get_lbs
+
+ 
+      - name: Add Temporary LoadBalancer
+        uri:
+         url: "{{API_ADDR}}/lb"
+         method: POST
+         body_format: json
+         body: '{"name":"{{name_lb}}","vip":"{{vip_lb}}","port":"{{port_lb}}","dns":{"ttl":"{{ttl_lb}}","cname":"{{cname_lb}}"}}'
+         status_code: 200
+         headers:
+           Content-Type: "application/json"
+        register: register_add_temp_lb
+
+
+
+
+      - set_fact: name_lb_prod="{{item.key}}"
+        with_dict:  "{{register_get_lbs.json}}"
+
+
+
+       
+    - include: core_play.yml
+      with_dict:
+        - "{{register_get_services.json}}"
+        
+      
+
+
+
+
+    
+      
+
+  
+
+
+
+
+
