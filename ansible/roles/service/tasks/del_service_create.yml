@@ -1,0 +1,14 @@
+ - name: Delete services
+   uri:
+     url: "{{API_ADDR}}/service/{{item.name_svc}}"
+     method: DELETE
+     
+     status_code: 200
+     headers:
+       Content-Type: "application/json"
+   register: delete_services
+   with_items: "{{name_services}}"
+ - name: debug
+   debug:
+    msg: "{{delete_services}}"
+
