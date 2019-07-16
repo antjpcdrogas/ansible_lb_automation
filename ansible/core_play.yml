@@ -8,15 +8,23 @@
    debug:
    #  msg: "{{item | tojson}}"
     msg: "---->{{ip_file.1}}"
+ 
 
+ 
  - name: remove_ip_ffile.py
    script: remove_ip_ffile.py
    register: zezinho_reg
+   failed_when: zezinho_reg.rc > 1
+
+
+ 
+   
+
 
  - name: registe_Ze
    debug:
    #  msg: "{{item | tojson}}"
-    msg: "---->{{zezinho_reg.stdout | trim}}"
+    msg: "---->{{zezinho_reg}}"
 
 
 
@@ -65,17 +73,8 @@
      status_code: 200
    register: add_services
  
- #- set_fact:
- #    ips: "{{ips | reject('search','0') | list }}"
- #  tags:
- #    - always
- #- shell: "sed -i '1d' /home/toca/ansible_lb_automation/ansible/ips.txt"
- #- shell: "echo $(cut -d, -f1 --complement /home/toca/ansible_lb_automation/ansible/ips.txt | sed 's/^/[/g') > /home/toca/ansible_lb_automation/ansible/ips.txt"
- #- local_action: copy content={{ ips }} dest=/home/toca/ansible_lb_automation/ansible/ips.txt
 
 
-
- #Bind to temp_lb and bind to monitor
  - name: Bind service  "{{item.key}} to monitor {{item.value.binds[0]}}
    uri:
      url: "{{API_ADDR}}/service/{{item.key}}/bind/{{item.value.binds[0]}}"
@@ -121,6 +120,24 @@
      headers:
        Content-Type: "application/json"
    register: register_bind_svctolb
+
+
+
+ - block:
+   - name: Delete Temporary LoadBalancer
+     uri:
+       url: "{{API_ADDR}}/lb/{{name_temp_lb}}"
+       method: DELETE
+     
+       status_code: 200
+       headers:
+         Content-Type: "application/json"
+     register: register_delete_temp_lb
+   - name: No more IPs left
+     debug: 
+       msg: "All IPs have been used."
+   - meta: end_play
+   when: zezinho_reg.rc == 1
 
 
 

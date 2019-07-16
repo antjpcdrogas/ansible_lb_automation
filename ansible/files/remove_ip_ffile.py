@@ -9,8 +9,8 @@ def slicer(my_str,sub):
    if index !=-1 :
     
          return my_str[index:] 
-   else :
-          raise Exception('Sub string not found!')
+ #  else :
+ #         print('Sub string not found!')
 
 
 
@@ -19,6 +19,8 @@ ip = drogas.split(',')
 new_ip =  ip[0].replace('\r','')
 print new_ip
 droguinhas = slicer(drogas,',')
+if not droguinhas:
+  exit(1)
 droguinhas_nova = droguinhas[1:]
 zezinho = open('/home/toca/ansible_lb_automation/ansible/ips.txt', 'w')
 

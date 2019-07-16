@@ -91,6 +91,9 @@
         headers:
           Content-Type: "application/json"
       register: register_delete_temp_lb
+    - name: All services updated
+      debug:
+       msg: "IPs from all services updated."
    
  
     
