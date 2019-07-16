@@ -2,17 +2,16 @@
  - name: START CORE PLAY DEBUG
    debug:
    #  msg: "{{item | tojson}}"
-    msg: "{{item.key}} lb prod -> {{name_lb_prod}}"
- - name: PAUSE
+    msg: "{{item.value.port}} lb prod -> {{name_lb_prod}}"
+
+ - name: ips from FILE
    debug:
    #  msg: "{{item | tojson}}"
-    msg: "PAUSE"
+    msg: "---->{{ip_file}}"
 
 
-                                     
-
-
-
+ 
+ 
  - name: "Delete service {{item.key}}"                         
    uri:
      url: "{{API_ADDR}}/service/{{item.key}}"
@@ -23,9 +22,31 @@
        Content-Type: "application/json"
    register: register_delete_services
    
+ 
+
  - name: debug
    debug:
     msg: "{{register_delete_services}}"
+
+ - name: "Create Service {{item.key}} with new ip={{ip_file.0}}"
+   uri:
+     url: "{{API_ADDR}}/service"
+     method: POST
+     body_format: json
+     body: '{"name":"{{item.value.name}}","ip":"{{ip_file.0}}","port":"{{item.value.port}}"}'  
+     status_code: 200
+   register: add_services
+ 
+ #- set_fact:
+ #    ips: "{{ips | reject('search','0') | list }}"
+ #  tags:
+ #    - always
+ #- shell: "sed -i '1d' /home/toca/ansible_lb_automation/ansible/ips.txt"
+ #- shell: "echo $(cut -d, -f1 --complement ips.txt | sed 's/^/[/g') > ips.txt"
+ - local_action: copy content={{ ips }} dest=/home/toca/ansible_lb_automation/ansible/ips.txt
+
+
+
 
 
  

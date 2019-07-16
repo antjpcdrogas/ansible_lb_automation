@@ -1,7 +1,18 @@
 ---
 - hosts: localhost
   vars:
-    NEW_IP: 168.192.0.1
+    ips: 
+      - 168.111.111.1
+      - 168.192.0.1
+    ip_file: [168.192.0.1, 168.192.255.255, 168.111.111.1, 168.111.222.1]
+    #ip_file: "{{lookup('file', '/home/toca/ansible_lb_automation/ansible/ips.txt') }}"
+    
+
+
+    NEW_IP_1: 168.192.0.1
+    NEW_IP_2: 168.192.0.2
+    NEW_IP_3: 168.192.0.3
+
 
 
   pre_tasks:
@@ -16,6 +27,10 @@
       - include_role:
           name: service
           tasks_from: get_services
+      - set_fact: 
+          json_services: "{{register_get_services.json}}"
+
+
 
       - include_role:
           name: loadbalancer
@@ -34,17 +49,47 @@
         register: register_add_temp_lb
 
 
+ #     - set_fact: 
+ #         json_services_1: "{{ json_services | combine(new_item, recursive=true) }}"
+ #       vars:
+ #         new_item: "{ '{{ item.key }}': { 'ip': '197.1.1' } }"          
+ #       with_dict: 
+ #         - "{{ json_services }}"
 
+ 
+
+     # - set_fact: 
+    #      json_services_1: "{{ json_services | combine( { item: some_value } ) }}"
+    #    vars:
+    #      some_value: 12345
+    #    with_dict:
+    #      - "{awesomeapp_1: {'name': 'batatas'}}"
+          
+        
+
+     # - name: BEFORE UPDATE IP
+      #  debug:
+      #    msg: "{{item}}"
+     #   with_dict: "{{json_services_1}}"
+
+
+    #  - name: TRY TO UPDATE IP
+    #    debug:
+          #msg: "{{item.value.ip}}"
+      #  with_dict: "{{register_get_services.json}}"#
 
       - set_fact: name_lb_prod="{{item.key}}"
         with_dict:  "{{register_get_lbs.json}}"
-
 
 
        
     - include: core_play.yml
       with_dict:
         - "{{register_get_services.json}}"
+      vars:
+         - ip_file: "{{lookup('file', '/home/toca/ansible_lb_automation/ansible/ips.txt') }}"
+          
+    
         
       
 
