@@ -4,7 +4,7 @@
     ips: 
       - 168.111.111.1
       - 168.192.0.1
-    ip_file: [168.192.0.1, 168.192.255.255, 168.111.111.1, 168.111.222.1]
+
     #ip_file: "{{lookup('file', '/home/toca/ansible_lb_automation/ansible/ips.txt') }}"
     
 
@@ -42,7 +42,7 @@
          url: "{{API_ADDR}}/lb"
          method: POST
          body_format: json
-         body: '{"name":"{{name_lb}}","vip":"{{vip_lb}}","port":"{{port_lb}}","dns":{"ttl":"{{ttl_lb}}","cname":"{{cname_lb}}"}}'
+         body: '{"name":"{{name_temp_lb}}","vip":"{{vip_temp_lb}}","port":"{{port_temp_lb}}","dns":{"ttl":"{{ttl_temp_lb}}","cname":"{{cname_temp_lb}}"}}'
          status_code: 200
          headers:
            Content-Type: "application/json"
@@ -88,7 +88,22 @@
         - "{{register_get_services.json}}"
       vars:
          - ip_file: "{{lookup('file', '/home/toca/ansible_lb_automation/ansible/ips.txt') }}"
-          
+
+
+
+
+  post_tasks:     
+    - name: Delete Temporary LoadBalancer
+      uri:
+        url: "{{API_ADDR}}/lb/{{name_temp_lb}}"
+        method: DELETE
+     
+        status_code: 200
+        headers:
+          Content-Type: "application/json"
+      register: register_delete_temp_lb
+   
+ 
     
         
       

@@ -6,8 +6,8 @@ port_lb: 8080
 
 
 
-name_temp_lb: temp_lb_prod
-vip_temp_lb: 10.0.2.6
-ttl_temp_lb: 1
-cname_temp_lb: pre_awesomeapp.blip.pt
-port_temp_lb: 8080 
+#name_temp_lb: temp_lb_prod
+#vip_temp_lb: 10.0.2.6
+#ttl_temp_lb: 1
+#cname_temp_lb: pre_awesomeapp.blip.pt
+#port_temp_lb: 8080 

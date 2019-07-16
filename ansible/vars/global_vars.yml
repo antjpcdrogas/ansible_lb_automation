@@ -1,8 +1,20 @@
 API_ADDR: http://localhost:9090
 
+name_lb: lb_prod
+vip_lb: 10.0.2.5
+ttl_lb: 1
+cname_lb: awesomeapp.blip.pt
+port_lb: 8080 
 
-name_lb: "temp_lb"
-vip_lb: "vip_lb"
-port_lb: 8080
-ttl_lb: 1 
-cname_lb: "awesomeapp.blip.pt"
+#name_lb: "temp_lb"
+#vip_lb: "vip_lb"
+#port_lb: 8080
+#ttl_lb: 1 
+#cname_lb: "awesomeapp.blip.pt"
+
+
+name_temp_lb: temp_lb_prod
+vip_temp_lb: 10.0.2.6
+ttl_temp_lb: 1
+cname_temp_lb: pre_awesomeapp.blip.pt
+port_temp_lb: 8080 

@@ -2,16 +2,34 @@
  - name: START CORE PLAY DEBUG
    debug:
    #  msg: "{{item | tojson}}"
-    msg: "{{item.value.port}} lb prod -> {{name_lb_prod}}"
+    msg: "{{item.value.binds[0]}} lb prod -> {{name_lb_prod}}"
 
  - name: ips from FILE
    debug:
    #  msg: "{{item | tojson}}"
     msg: "---->{{ip_file}}"
+ #- meta: end_play
 
 
  
  
+
+ 
+ - name: Unbind service  "{{item.key}} from Loadbalancer {{name_lb}}"
+   uri:
+     url: "{{API_ADDR}}/lb/{{name_lb}}/unbind/{{item.key}}"
+     method: PUT
+    
+     status_code: 200
+     headers:
+       Content-Type: "application/json"
+   register: register_unbind_svctolb
+
+
+
+
+
+
  - name: "Delete service {{item.key}}"                         
    uri:
      url: "{{API_ADDR}}/service/{{item.key}}"
@@ -42,8 +60,60 @@
  #  tags:
  #    - always
  #- shell: "sed -i '1d' /home/toca/ansible_lb_automation/ansible/ips.txt"
- #- shell: "echo $(cut -d, -f1 --complement ips.txt | sed 's/^/[/g') > ips.txt"
- - local_action: copy content={{ ips }} dest=/home/toca/ansible_lb_automation/ansible/ips.txt
+ #- shell: "echo $(cut -d, -f1 --complement /home/toca/ansible_lb_automation/ansible/ips.txt | sed 's/^/[/g') > /home/toca/ansible_lb_automation/ansible/ips.txt"
+ #- local_action: copy content={{ ips }} dest=/home/toca/ansible_lb_automation/ansible/ips.txt
+
+
+
+ #Bind to temp_lb and bind to monitor
+ - name: Bind service  "{{item.key}} to monitor {{item.value.binds[0]}}
+   uri:
+     url: "{{API_ADDR}}/service/{{item.key}}/bind/{{item.value.binds[0]}}"
+     method: PUT
+    
+     status_code: 200
+     headers:
+       Content-Type: "application/json"
+   register: register_bind_svctolb
+
+
+ - name: Bind service {{item.key}} to temporary LoadBalancer {{name_temp_lb}}
+   uri:
+     url: "{{API_ADDR}}/lb/{{name_temp_lb}}/bind/{{item.key}}"
+     method: PUT
+    
+     status_code: 200
+     headers:
+       Content-Type: "application/json"
+   register: register_bind_svctolb
+
+  
+#### At this point a playbook or task for be included to perform QA tests on the new service recently added to the temporary LB
+
+
+ - name: Unbind service  "{{item.key}} from  Temporary Loadbalancer {{name_temp_lb}}"
+   uri:
+     url: "{{API_ADDR}}/lb/{{name_temp_lb}}/unbind/{{item.key}}"
+     method: PUT
+    
+     status_code: 200
+     headers:
+       Content-Type: "application/json"
+   register: register_unbind2_svctolb
+
+
+ - name: Bind again service {{item.key}} to Production LoadBalancer {{name_lb}}
+   uri:
+     url: "{{API_ADDR}}/lb/{{name_lb}}/bind/{{item.key}}"
+     method: PUT
+    
+     status_code: 200
+     headers:
+       Content-Type: "application/json"
+   register: register_bind_svctolb
+
+
+
 
 
 
