@@ -7,7 +7,6 @@
     uri:
       url: "{{API_ADDR}}/lb"
     register: lb_json
-
   - set_fact:
       new_infra: true 
 #    when: lb_json.json | length == 0 #UNCOMMENT

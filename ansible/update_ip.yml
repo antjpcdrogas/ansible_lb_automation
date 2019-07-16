@@ -1,23 +1,12 @@
 ---
 - hosts: localhost
-  vars:
-    ips: 
-      - 168.111.111.1
-      - 168.192.0.1
-
-    #ip_file: "{{lookup('file', '/home/toca/ansible_lb_automation/ansible/ips.txt') }}"
     
-
-
-    NEW_IP_1: 168.192.0.1
-    NEW_IP_2: 168.192.0.2
-    NEW_IP_3: 168.192.0.3
 
 
 
   pre_tasks:
   - include_vars: global_vars.yml
-
+  - copy: content="{{ new_ips }}" dest=/home/toca/ansible_lb_automation/ansible/ips.txt
 
 
   tasks:
