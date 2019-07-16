@@ -7,10 +7,20 @@
  - name: ips from FILE
    debug:
    #  msg: "{{item | tojson}}"
-    msg: "---->{{ip_file}}"
- #- meta: end_play
+    msg: "---->{{ip_file.1}}"
+
+ - name: remove_ip_ffile.py
+   script: remove_ip_ffile.py
+   register: zezinho_reg
+
+ - name: registe_Ze
+   debug:
+   #  msg: "{{item | tojson}}"
+    msg: "---->{{zezinho_reg.stdout | trim}}"
 
 
+
+# - meta: end_play
  
  
 
@@ -46,12 +56,12 @@
    debug:
     msg: "{{register_delete_services}}"
 
- - name: "Create Service {{item.key}} with new ip={{ip_file.0}}"
+ - name: "Create Service {{item.key}} with new ip={{zezinho_reg.stdout}}"
    uri:
      url: "{{API_ADDR}}/service"
      method: POST
      body_format: json
-     body: '{"name":"{{item.value.name}}","ip":"{{ip_file.0}}","port":"{{item.value.port}}"}'  
+     body: '{"name":"{{item.value.name}}","ip":"{{zezinho_reg.stdout | trim}}","port":"{{item.value.port}}"}'  
      status_code: 200
    register: add_services
  
