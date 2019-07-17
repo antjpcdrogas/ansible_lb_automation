@@ -1,27 +1,26 @@
 #!/usr/bin/python
+import os
+import sys
 
-data_parsed = open('/home/toca/ansible_lb_automation/ansible/ips.txt', 'r')
-
-drogas = data_parsed.read()
+data_parsed = open(sys.argv[1], 'r')
+ip_string = data_parsed.read()
+data_parsed.close()
 
 def slicer(my_str,sub):
    index=my_str.find(sub)
-   if index !=-1 :
-    
+
+   if index !=-1 :   
          return my_str[index:] 
- #  else :
- #         print('Sub string not found!')
 
-
-
-
-ip = drogas.split(',')
+ip = ip_string.split(',')
 new_ip =  ip[0].replace('\r','')
 print new_ip
-droguinhas = slicer(drogas,',')
-if not droguinhas:
-  exit(1)
-droguinhas_nova = droguinhas[1:]
-zezinho = open('/home/toca/ansible_lb_automation/ansible/ips.txt', 'w')
+remaining_ip_string = slicer(ip_string,',')
 
-zezinho.write(droguinhas_nova)
+if not remaining_ip_string:
+  exit(1)
+
+final_ip_string = remaining_ip_string[1:]
+file_handler = open(sys.argv[1], 'w')
+file_handler.write(final_ip_string)
+file_handler.close()

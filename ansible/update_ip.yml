@@ -1,17 +1,21 @@
 ---
 - hosts: localhost
     
-
-
-
   pre_tasks:
   - include_vars: global_vars.yml
-  - copy: content="{{ new_ips }}" dest=/home/toca/ansible_lb_automation/ansible/ips.txt
+  - name:
+    debug:
+      msg: "{{playbook_dir + 'ips.txt'}}"
+
+  - fail:
+      msg: "Usage format: ansible-playbook update_ip.yml -k -e new_ips=<ip1,ip2,..>"
+    when: new_ips is not defined  
+  - copy: content="{{ new_ips }}" dest="{{ playbook_dir + '/files/ips.txt'}}" 
 
 
   tasks:
     
-    - name: get all components present on the LB 
+    - name: get all components present on LoadBalancer.
       block:
       - include_role:
           name: service
@@ -26,7 +30,7 @@
           tasks_from: get_lbs
 
  
-      - name: Add Temporary LoadBalancer
+      - name: Add temporary LoadBalancer.
         uri:
          url: "{{API_ADDR}}/lb"
          method: POST
@@ -38,51 +42,26 @@
         register: register_add_temp_lb
 
 
- #     - set_fact: 
- #         json_services_1: "{{ json_services | combine(new_item, recursive=true) }}"
- #       vars:
- #         new_item: "{ '{{ item.key }}': { 'ip': '197.1.1' } }"          
- #       with_dict: 
- #         - "{{ json_services }}"
-
- 
-
-     # - set_fact: 
-    #      json_services_1: "{{ json_services | combine( { item: some_value } ) }}"
-    #    vars:
-    #      some_value: 12345
-    #    with_dict:
-    #      - "{awesomeapp_1: {'name': 'batatas'}}"
-          
-        
-
-     # - name: BEFORE UPDATE IP
-      #  debug:
-      #    msg: "{{item}}"
-     #   with_dict: "{{json_services_1}}"
-
-
-    #  - name: TRY TO UPDATE IP
-    #    debug:
-          #msg: "{{item.value.ip}}"
-      #  with_dict: "{{register_get_services.json}}"#
 
       - set_fact: name_lb_prod="{{item.key}}"
         with_dict:  "{{register_get_lbs.json}}"
 
 
-       
+
+
+
     - include: core_play.yml
       with_dict:
         - "{{register_get_services.json}}"
       vars:
-         - ip_file: "{{lookup('file', '/home/toca/ansible_lb_automation/ansible/ips.txt') }}"
+         - ip_file: "{{lookup('file', 'ips.txt') }}"
+
 
 
 
 
   post_tasks:     
-    - name: Delete Temporary LoadBalancer
+    - name: Delete temporary LoadBalancer.
       uri:
         url: "{{API_ADDR}}/lb/{{name_temp_lb}}"
         method: DELETE

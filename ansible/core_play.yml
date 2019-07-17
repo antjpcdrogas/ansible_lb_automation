@@ -1,54 +1,32 @@
 
- - name: START CORE PLAY DEBUG
+ - name: Start ip update
    debug:
-   #  msg: "{{item | tojson}}"
-    msg: "{{item.value.binds[0]}} lb prod -> {{name_lb_prod}}"
+    msg: "IP update starting on service {{item.key}}."
 
- - name: ips from FILE
-   debug:
-   #  msg: "{{item | tojson}}"
-    msg: "---->{{ip_file.1}}"
- 
 
- 
- - name: remove_ip_ffile.py
-   script: remove_ip_ffile.py
-   register: zezinho_reg
-   failed_when: zezinho_reg.rc > 1
 
 
  
-   
+ - name: get first IP and remove it from file.
+   script: remove_ip_ffile.py "{{ playbook_dir + '/files/ips.txt'}}"
+   register: register_py
+   failed_when: register_py.rc > 1
 
 
- - name: registe_Ze
-   debug:
-   #  msg: "{{item | tojson}}"
-    msg: "---->{{zezinho_reg}}"
-
-
-
-# - meta: end_play
- 
  
 
- 
- - name: Unbind service  "{{item.key}} from Loadbalancer {{name_lb}}"
+
+ - name: Unbind service "{{item.key}} from Loadbalancer {{name_lb}}."
    uri:
      url: "{{API_ADDR}}/lb/{{name_lb}}/unbind/{{item.key}}"
-     method: PUT
-    
+     method: PUT    
      status_code: 200
      headers:
        Content-Type: "application/json"
    register: register_unbind_svctolb
 
 
-
-
-
-
- - name: "Delete service {{item.key}}"                         
+ - name: "Delete service {{item.key}}."                         
    uri:
      url: "{{API_ADDR}}/service/{{item.key}}"
      method: DELETE
@@ -60,22 +38,18 @@
    
  
 
- - name: debug
-   debug:
-    msg: "{{register_delete_services}}"
-
- - name: "Create Service {{item.key}} with new ip={{zezinho_reg.stdout}}"
+ - name: Create Service {{item.key}} with new ip={{register_py.stdout}}.
    uri:
      url: "{{API_ADDR}}/service"
      method: POST
      body_format: json
-     body: '{"name":"{{item.value.name}}","ip":"{{zezinho_reg.stdout | trim}}","port":"{{item.value.port}}"}'  
+     body: '{"name":"{{item.value.name}}","ip":"{{register_py.stdout | trim}}","port":"{{item.value.port}}"}'  
      status_code: 200
-   register: add_services
+   register: register_add_services
  
 
 
- - name: Bind service  "{{item.key}} to monitor {{item.value.binds[0]}}
+ - name: Bind service "{{item.key}} to monitor {{item.value.binds[0]}}.
    uri:
      url: "{{API_ADDR}}/service/{{item.key}}/bind/{{item.value.binds[0]}}"
      method: PUT
@@ -86,7 +60,7 @@
    register: register_bind_svctolb
 
 
- - name: Bind service {{item.key}} to temporary LoadBalancer {{name_temp_lb}}
+ - name: Bind service {{item.key}} to temporary LoadBalancer {{name_temp_lb}}.
    uri:
      url: "{{API_ADDR}}/lb/{{name_temp_lb}}/bind/{{item.key}}"
      method: PUT
@@ -100,7 +74,7 @@
 #### At this point a playbook or task for be included to perform QA tests on the new service recently added to the temporary LB
 
 
- - name: Unbind service  "{{item.key}} from  Temporary Loadbalancer {{name_temp_lb}}"
+ - name: Unbind service "{{item.key}} from  Temporary Loadbalancer {{name_temp_lb}}"
    uri:
      url: "{{API_ADDR}}/lb/{{name_temp_lb}}/unbind/{{item.key}}"
      method: PUT
@@ -111,7 +85,7 @@
    register: register_unbind2_svctolb
 
 
- - name: Bind again service {{item.key}} to Production LoadBalancer {{name_lb}}
+ - name: Bind ( again) service {{item.key}} to Production LoadBalancer {{name_lb}}.
    uri:
      url: "{{API_ADDR}}/lb/{{name_lb}}/bind/{{item.key}}"
      method: PUT
@@ -123,8 +97,11 @@
 
 
 
+
+
+
  - block:
-   - name: Delete Temporary LoadBalancer
+   - name: Delete temporary LoadBalancer.
      uri:
        url: "{{API_ADDR}}/lb/{{name_temp_lb}}"
        method: DELETE
@@ -133,11 +110,11 @@
        headers:
          Content-Type: "application/json"
      register: register_delete_temp_lb
-   - name: No more IPs left
+   - name: No more IPs 
      debug: 
-       msg: "All IPs have been used."
+       msg: "All IPs used."
    - meta: end_play
-   when: zezinho_reg.rc == 1
+   when: register_py.rc == 1
 
 
 
