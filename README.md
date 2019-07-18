@@ -35,6 +35,8 @@ Commit and push your solution to a branch on this repo and open a MR to master.
 #################################################################################################################################
 
 Challenge Solution
+
+
 This challenge was solved using the automation tool Ansible and python.
 Development environment:
 OS: Fedora 29 4.18.16-300.fc29.x86_64
