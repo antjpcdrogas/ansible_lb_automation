@@ -39,10 +39,16 @@ Challenge Solution
 
 
 This challenge was solved using the automation tool Ansible and python.
+
 Development environment:
+
 OS: Fedora 29 4.18.16-300.fc29.x86_64
+
 Ansible: 2.8.1
+
 Python: 2.7.15
+
+
 I know that Ansible is not by far the best tool to solve this challenge but is the tool that i am more confortable.
 Writing a python script could be boring and i wanted to try something diferent.
 Since Ansible was not created to solve this kind of tasks i had more troubles because of it:
@@ -54,10 +60,15 @@ Modern list manipulation is almost impossible( to bypass this point a python scr
 Expected pre-requisites:
 
 It is expected that a infraestruture will all components( binded to the core LB) is already present.
+
 Main playbook to solve the challenge: update_ip.yml
+
 Usage: ansible-playbook update_ip.yml -k -e new_ips=<ip1,ip2,...>
+
 ex: ansible-playbook update_ip.yml -k -e new_ips=10.118.0.1,10.118.0.2,10.118.0.3,10.118.0.4
+
 The library libselinux-python needs to be installed before.
+
 The challenge was split in 4 phases to resume playbook behavior.
 
 1º phases:
