@@ -3,6 +3,7 @@
 Scenario
 
 You work somewhere.
+
 Your job requires you to automate API calls used in the creation of a production environment for our services.
 We have just acquired a new load balancing solution that exposes a REST API which allows us to fully automate it and integrate it with our automated deployment pipelines.
 You do not have to worry about deploying the service or it's provisioning, assume all VMs/Containers were deployed previously and are already running.s
@@ -51,12 +52,14 @@ in some situations set_fact only registers the last entry from a dict/list
 Modern list manipulation is almost impossible( to bypass this point a python script was written and included in the playbook)
 
 Expected pre-requisites:
+
 It is expected that a infraestruture will all components( binded to the core LB) is already present.
 Main playbook to solve the challenge: update_ip.yml
 Usage: ansible-playbook update_ip.yml -k -e new_ips=<ip1,ip2,...>
 ex: ansible-playbook update_ip.yml -k -e new_ips=10.118.0.1,10.118.0.2,10.118.0.3,10.118.0.4
 The library libselinux-python needs to be installed before.
 The challenge was split in 4 phases to resume playbook behavior.
+
 1º phases:
 
 Collect all existent components on the API( only loadbalancers and services collected. Theres no point collecting monitor because we already have all the necessary info from the previous components)
@@ -80,14 +83,22 @@ repeat all previous steps untill all services are updated or all ips used.
 destroy temporary load balancer
 
 Execution time with 3 services: 28 seg
+
+
 Playbook finish when all services have been update or when all IPs have been used.
 Variable that contains the API address is located at files/global_vars.yml
+
 Additionally from what as been asked in the challenge i created 2 more playboks to help during the development process. The purpose of these playbooks is to create and delete an entire infrastruture.
+
 Usage: ansible-playbook create_infra.yml
+
 This play create 1 LoadBalancer, 3 services and 3 monitor  with all components binded.
 This plays are distributed hierarchically by roles, 1 per component and 1 more for the bind.
+
 Features that could be implemented:
 
-Logging
-Create objects per item collected
-Choose with services should be updated first based on metrics or others factors.
+ - Logging
+
+ - Create objects per item collected
+
+ - Choose with services should be updated first based on metrics or others factors.
